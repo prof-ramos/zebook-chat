@@ -1,64 +1,31 @@
-# README.md
-# ZeBook - Chatbot Jurídico para Concursos Públicos
+# ZeBook — Chatbot Jurídico para Concursos
 
-Este é um projeto OpenSource e build-in-public de um chatbot especializado em conteúdo jurídico para auxiliar candidatos em provas de concursos públicos no Brasil.
+Assistente em PT‑BR com RAG (Supabase + embeddings Gemini) para estudo de concursos. UI simples com textarea, alternância Flash/Pro e seção “Fontes”.
 
-## Tecnologias
+## Setup Rápido
+- Dependências: `pnpm i`
+- Ambiente: `cp .env.example .env.local` e preencha `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `GOOGLE_GENERATIVE_AI_API_KEY`. Não use `SUPABASE_SERVICE_ROLE_KEY` em produção.
+- Supabase: rode a migração em `supabase/migrations/20250829_init.sql` (SQL Editor ou CLI) e confirme a função `match_chunks`.
 
-- Next.js
-- React
-- TypeScript
-- pnpm
-- Supabase
-- Tailwind CSS
-- Shadcn/ui
-- Lucide React
-- React Hook Form
-- Zod
-- AI Vercel SDK
-- LangChain
-- Google Gemini API
-- i18next
-- react-markdown
-- pdf-parse
-- mammoth
+## Ingestão de Documentos (local/CI)
+1) Coloque PDFs/DOCX em `data/` (ex.: leis, decisões, apostilas)
+2) Execute: `pnpm ingest data/`
+   - Requer `SUPABASE_SERVICE_ROLE_KEY` no `.env.local`.
 
-## Como rodar o projeto
+## Desenvolvimento
+- Dev: `pnpm dev` → http://localhost:3000
+- Build: `pnpm build` | Produção local: `pnpm start`
+- Lint: `pnpm lint`
 
-1. Instale as dependências:
-   ```bash
-   pnpm install
-   ```
+## API
+`POST /api/chat` com `{ messages, mode: 'flash'|'pro' }`.
+- Faz embed da pergunta, recupera contextos via `rpc('match_chunks')` e faz streaming da resposta (Vercel AI SDK + Gemini). O modelo inclui uma seção “Fontes” com índices.
 
-2. Configure as variáveis de ambiente no arquivo `.env.local`:
-   ```bash
-   NEXT_PUBLIC_SUPABASE_URL=sua_url_do_supabase
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=sua_chave_anonima_do_supabase
-   GOOGLE_GENERATIVE_AI_API_KEY=sua_chave_da_api_do_gemini
-   ```
+## Estrutura
+- `app/api/chat/route.ts`: Rota de chat (streaming + RAG)
+- `scripts/ingest.ts`: Parser de PDF/DOCX, chunking e embeddings
+- `lib/supabase.ts`: Helper do client
+- `lib/*Client.ts`: Integrações (Supabase SSR, Gemini)
+- `messages/`: i18n
 
-3. Inicie o servidor de desenvolvimento:
-   ```bash
-   pnpm run dev
-   ```
-
-4. Abra [http://localhost:3000](http://localhost:3000) no seu navegador.
-
-## Estrutura do Projeto
-
-- `app/`: Rotas e layouts da aplicação (App Router do Next.js)
-- `components/`: Componentes reutilizáveis da UI
-- `lib/`: Funções utilitárias e lógica de negócios
-- `public/`: Arquivos estáticos
-- `messages/`: Arquivos de tradução para i18next
-- `tailwind.config.js`: Configuração do Tailwind CSS
-- `tsconfig.json`: Configuração do TypeScript
-- `next.config.ts`: Configuração do Next.js
-
-## Contribuindo
-
-Contribuições são bem-vindas! Sinta-se à vontade para abrir issues e pull requests.
-
-## Licença
-
-MIT
+Licença: MIT
