@@ -1,0 +1,47 @@
+# .github/workflows/coderabbit.yaml
+name: CodeRabbit Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  pull_request_target:
+    types: [opened, synchronize, reopened, ready_for_review]
+  merge_group:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+  statuses: write
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Code Review
+        uses: coderabbitai/code-review@latest
+        with:
+          # Required: GitHub token for authentication
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          
+          # Optional: Configure review settings
+          review_style: "balanced" # Options: "concise", "balanced", "detailed"
+          max_review_comments: 10
+          
+          # Optional: Language model settings
+          llm_provider: "openai"
+          llm_model: "gpt-4o-mini"
+          
+          # Optional: Filter settings
+          include_files: |
+            **/*.ts
+            **/*.tsx
+            **/*.js
+            **/*.jsx
+          
+          exclude_files: |
+            **/node_modules/**
+            **/*.md
+            **/dist/**
+            **/build/**
