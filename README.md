@@ -29,3 +29,6 @@ Assistente em PT‑BR com RAG (Supabase + embeddings Gemini) para estudo de conc
 - `messages/`: i18n
 
 Licença: MIT
+
+## Changelog
+- PR: Integra pipeline RAG (migração + ingestão + API), UI mínima (textarea, toggle Flash/Pro, Fontes), diretrizes em `AGENTS.md` e ajustes de testes/Jest.
