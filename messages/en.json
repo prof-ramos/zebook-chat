@@ -1,0 +1,14 @@
+{
+  "pt-BR": {
+    "translation": {
+      "welcome": "Bem-vindo ao ZeBook",
+      "description": "Seu assistente jurídico para concursos públicos."
+    }
+  },
+  "en": {
+    "translation": {
+      "welcome": "Welcome to ZeBook",
+      "description": "Your legal assistant for public competitions."
+    }
+  }
+}
